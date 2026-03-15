@@ -1,0 +1,66 @@
+<!-- 文件路径: templates/index.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>请输入你的名字</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f0f8ff;
+            margin: 0;
+        }
+        .box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h2 { color: #2c3e50; margin-top: 0; }
+
+        /* 输入框样式 */
+        input[type="text"] {
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 250px;
+            margin-right: 10px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #3498db;
+        }
+
+        /* 按钮样式 */
+        button {
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <!-- 只保留了标题和输入表单 -->
+        <h2>我是你的智能助手，输入问题我随时回答</h2>
+
+        <form action="/submit" method="POST">
+            <input type="text" name="username_input" placeholder="在这里输入..." required autofocus>
+            <button type="submit">提交</button>
+        </form>
+    </div>
+</body>
+</html>
