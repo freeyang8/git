@@ -11,9 +11,13 @@ https://blog.csdn.net/weixin_56649281/article/details/136569427
 并且在main.py中CONFIG列表中添加配置自己的参数（将引号内的‘你的’替换掉）
 
 "appid": "你的",
+
 "api_secret": "你的",
+
 "api_key": "你的",
+
 "gpt_url": "你的",
+
 "domain": "你的"
 
 ③点击启动，终端会生成地址，在浏览器输入地址，即可使用
