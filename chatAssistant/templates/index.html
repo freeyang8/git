@@ -1,0 +1,133 @@
+<!-- 文件路径: templates/index.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>智能助手</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f0f8ff;
+            margin: 0;
+        }
+        .box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        h2 { color: #2c3e50; margin-top: 0; }
+
+        input[type="text"] {
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 60%;
+            margin-right: 10px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus { border-color: #3498db; }
+
+        button {
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover { background-color: #2980b9; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+
+        /* 结果显示区域样式 */
+        #result-area {
+            margin-top: 30px;
+            text-align: left;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            display: none; /* 默认隐藏 */
+            white-space: pre-wrap; /* 保留换行符 */
+            line-height: 1.6;
+            color: #333;
+        }
+        .loading { color: #666; font-style: italic; }
+        .error { color: #e74c3c; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>🤖 我是你的智能助手</h2>
+        <p style="color:#666; font-size: 14px;">输入问题，我随时回答</p>
+
+        <!-- 表单 -->
+        <form id="ai-form">
+            <input type="text" id="question-input" name="username_input" placeholder="在这里输入你的问题..." required autofocus>
+            <button type="submit" id="submit-btn">提交</button>
+        </form>
+
+        <!-- 结果显示区 -->
+        <div id="result-area"></div>
+    </div>
+
+    <script>
+        document.getElementById('ai-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // 阻止表单默认刷新跳转
+
+            const inputField = document.getElementById('question-input');
+            const submitBtn = document.getElementById('submit-btn');
+            const resultArea = document.getElementById('result-area');
+            const query = inputField.value;
+
+            if (!query.trim()) return;
+
+            // 1. 界面变为加载状态
+            submitBtn.disabled = true;
+            submitBtn.innerText = "思考中...";
+            resultArea.style.display = 'block';
+            resultArea.innerHTML = '<span class="loading">正在连接大脑，请稍候...</span>';
+
+            // 2. 发送数据到后端 /submit
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'username_input=' + encodeURIComponent(query)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // 3. 接收结果并显示
+                if (data.success) {
+                    // 显示 AI 的回答
+                    resultArea.innerHTML = "<strong>🤖 助手回答：</strong><br>" + data.answer;
+                } else {
+                    // 显示错误
+                    resultArea.innerHTML = "<span class='error'>❌ 出错了: " + (data.error || "未知错误") + "</span>";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultArea.innerHTML = "<span class='error'>❌ 网络错误，请检查后端是否运行。</span>";
+            })
+            .finally(() => {
+                // 4. 恢复按钮状态
+                submitBtn.disabled = false;
+                submitBtn.innerText = "提交";
+                inputField.value = ''; // 清空输入框
+                inputField.focus();
+            });
+        });
+    </script>
+</body>
+</html>
